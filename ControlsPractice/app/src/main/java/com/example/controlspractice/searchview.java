@@ -11,7 +11,7 @@ public class searchview extends AppCompatActivity {
 
     SearchView sv;
     ListView lv;
-    String cities[] = {"surat","ahmedabad","bardoli","navsari","Valsad"};
+    String cities[] = {"surat","ahmedabad","bardoli","navsari","Valsad","Vapi"};
     ArrayAdapter<String> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
