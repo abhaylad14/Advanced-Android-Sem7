@@ -21,12 +21,13 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btninsert;
+    Button btninsert, btnupdate;
     ListView lv;
     EditText txtname,txtcontact;
     SQLiteDatabase db;
     DatabaseHelper dh;
     ArrayAdapter<String> adapter;
+    int UpdateId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         txtname = findViewById(R.id.txtname);
         txtcontact = findViewById(R.id.txtcontact);
         btninsert = findViewById(R.id.btninsert);
+        btnupdate = findViewById(R.id.btnupdate);
         lv = findViewById(R.id.lv);
         dh = new DatabaseHelper(this);
     }
@@ -61,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        btnupdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updatedata();
             }
         });
     }
@@ -91,18 +99,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void callupdate(String data){
-        String id[] = data.split("|");
-        Toast.makeText(this, "value: " +id[0].toString(), Toast.LENGTH_SHORT).show();
+        String arr[] = data.split(",");
+        txtname.setText(arr[1]);
+        txtcontact.setText(arr[2]);
+        UpdateId = Integer.parseInt(arr[0]);
+    }
+    private void updatedata(){
+        String name = txtname.getText().toString();
+        String contactno = txtcontact.getText().toString();
+
+        int status = dh.updatedata(new Contacts(UpdateId,name,contactno));
+        if(status >= 1){
+            Toast.makeText(this, "Record updated successfully", Toast.LENGTH_SHORT).show();
+            displaydata();
+            txtname.setText("");
+            txtcontact.setText("");
+        }
+        else {
+            Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT).show();
+        }
     }
     private void delete(String data){
-        String id[] = data.split("|");
+        String id[] = data.split("");
         int status = dh.deleteDataById(Integer.parseInt(id[0]));
         if(status >= 1){
             Toast.makeText(this, "Record deleted successfully", Toast.LENGTH_SHORT).show();
             displaydata();
         }
         else{
-            Toast.makeText(this, "" + status, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT).show();
         }
     }
 }
