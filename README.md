@@ -9,4 +9,5 @@
 2) DatabaseIO:  
 -> Insert data  
 -> View data  
+-> Update data  
 -> Delete data
