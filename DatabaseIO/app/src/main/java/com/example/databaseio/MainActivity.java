@@ -1,10 +1,14 @@
 package com.example.databaseio;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         ControlInitialization();
         events();
         displaydata();
+        registerForContextMenu(lv);
     }
 
     private void ControlInitialization(){
@@ -49,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
                 int status = dh.adddata(new Contacts(name,contactno));
                 if(status >= 1){
                     Toast.makeText(MainActivity.this, "Data added successfully", Toast.LENGTH_SHORT).show();
+                    txtname.setText("");
+                    txtcontact.setText("");
                     displaydata();
                 }
                 else {
@@ -63,4 +70,39 @@ public class MainActivity extends AppCompatActivity {
         lv.setAdapter(adapter);
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.showmenu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()){
+            case R.id.optupdate:
+                callupdate(adapter.getItem(info.position));
+                return true;
+            case R.id.optdelete:
+                delete(adapter.getItem(info.position));
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+    private void callupdate(String data){
+        String id[] = data.split("|");
+        Toast.makeText(this, "value: " +id[0].toString(), Toast.LENGTH_SHORT).show();
+    }
+    private void delete(String data){
+        String id[] = data.split("|");
+        int status = dh.deleteDataById(Integer.parseInt(id[0]));
+        if(status >= 1){
+            Toast.makeText(this, "Record deleted successfully", Toast.LENGTH_SHORT).show();
+            displaydata();
+        }
+        else{
+            Toast.makeText(this, "" + status, Toast.LENGTH_SHORT).show();
+        }
+    }
 }

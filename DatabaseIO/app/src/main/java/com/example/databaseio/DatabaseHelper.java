@@ -50,9 +50,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query,null);
         if(cursor.moveToFirst()){
             do {
-                contactlist.add(cursor.getString(0) + " | " + cursor.getString(1) + " | " + cursor.getString(2));
+                contactlist.add(cursor.getString(0) + "|" + cursor.getString(1) + "|" + cursor.getString(2));
             }while (cursor.moveToNext());
         }
         return contactlist;
+    }
+    public int deleteDataById(int id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        int status = db.delete(table_name,key_id + "=?" , new String[]{String.valueOf(id)});
+        db.close();
+        return status;
     }
 }
