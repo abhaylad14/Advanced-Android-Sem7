@@ -1,7 +1,8 @@
 # Advanced-Android-Sem7
------
 
 1) ControlsPractice:  
+-> SeekBar  
+-> RatingBar  
 -> SearchView  
 -> WebView  
 -> SharedPreferences  
